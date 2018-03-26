@@ -26,14 +26,28 @@ tools_used <- sr %>%
                 summarize(count = n()) %>%
                 arrange(desc(count))
 
-#bar chart
+
+# from the bar chart can see that R and Python are the most used tools.
 
 ggplot(tools_used, aes(x = tool, y = count)) +
   geom_bar(stat = 'identity') +
   coord_flip()
   
-# R vs Python
+# R vs Python?
 
+debate_tools <- sr %>%
+                  mutate(lang_pref = case_when(
+                    # exclusive R case      
+                    grepl(pattern = 'R', x = WorkToolsSelect) & !grepl(pattern = 'Python',
+                                x = WorkToolsSelect) ~ 'R',
+                    # exclusive Python case      
+                    grepl(pattern = 'Python', x = WorkToolsSelect) & !grepl(pattern = 'R', 
+                                x = WorkToolsSelect) ~ 'Python',
+                    # neither Python or R case
+                    !grepl(pattern = 'R', WorkToolsSelect) & !grepl(pattern = 'Python', WorkToolsSelect)
+                      ~ 'Neither')
+                    )
+                    
 
 
 
