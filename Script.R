@@ -45,8 +45,29 @@ debate_tools <- sr %>%
                                 x = WorkToolsSelect) ~ 'Python',
                     # neither Python or R case
                     !grepl(pattern = 'R', WorkToolsSelect) & !grepl(pattern = 'Python', WorkToolsSelect)
-                      ~ 'Neither')
+                      ~ 'Neither',
+                    # both Python and R..can't use this expression
+                    grepl(pattern = 'R | Python', WorkToolsSelect) ~ 'Both')
                     )
+                  
+                  
+#remove the Neither column and visualize 
+
+debate_plot <- debate_tools %>%
+                      group_by(lang_pref) %>%
+                      summarize(count = n()) %>%
+                      filter(lang_pref != 'Neither')
+
+ggplot(debate_plot, aes(x = lang_pref, y = count)) +
+  geom_bar(stat = 'identity')
+
+
+
+recommendations <- debate_tools %>%
+                    group_by(use = lang_pref, recom = LanguageRecommendationSelect) %>%
+                    summarise(count = n()) %>%
+                    arrange(desc(count)) %>%
+                    filter(recom != 'NA')
                     
 
 
